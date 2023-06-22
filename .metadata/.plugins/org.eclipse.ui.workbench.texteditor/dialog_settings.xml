@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="별점"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="별점"/>
+			<item value="공유"/>
+			<item value="주소"/>
+			<item value="더보기"/>
+			<item value="filePath"/>
+			<item value="${ place.getPlaceType }"/>
+			<item value="getPlaceNo"/>
+			<item value="&lt;%= contextPath%&gt;"/>
+			<item value="mini"/>
+			<item value="신고"/>
+			<item value="login"/>
+			<item value="document"/>
+			<item value="textarea"/>
+			<item value="report_modal"/>
+			<item value="close"/>
+		</list>
+		<list key="replacehistory">
+			<item value="${ contextPath }"/>
+			<item value=" "/>
+			<item value="PlaceDao"/>
+			<item value="board"/>
+			<item value="MenuType"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="1429"/>
+		<item key="DIALOG_Y_ORIGIN" value="276"/>
+		<item key="DIALOG_WIDTH" value="340"/>
+		<item key="DIALOG_HEIGHT" value="454"/>
+		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>
+	</section>
+</section>

@@ -1,0 +1,17 @@
+package com.freeeat.place.model.vo;
+
+public class Place {
+	
+	private int placeNo; //식당번호
+	private String placeName; // 식당이름
+	private String address; //주소
+	private String phone; // 식당번호
+	private String kind; // 업종 
+	private String dayOff; // 휴무일
+	private String parking; // 주차여부 char(1)
+	private String info; // 매장소개발 
+	private String delete; //삭제여부 char(1)
+	private int views; // 조회수 
+	private String placeYN; // 승인여부 
+	
+}

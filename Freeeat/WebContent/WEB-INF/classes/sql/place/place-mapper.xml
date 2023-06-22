@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+
+	<comment>게시글 관련 SQL문</comment>
+	
+	<!-- 강매란 시작  -->
+	<entry key="reviewInsert">
+		INSERT 
+		  INTO
+		       REVIEW
+		       (
+		       REVIEW_NO,
+		       MEM_NO,
+		       PLACE_NO,
+		       REVIEW_COUNT,
+		       REVIEW_MENU_TYPE,
+		       REVIEW_CONTENT
+		       )
+		VALUES
+		       (
+		       SEQ_RNO.NEXTVAL,
+		       ?,
+		       ?,
+		       ?,
+		       ?,
+		       ?
+		       )
+			   	
+	</entry>
+	
+	<entry key="tagsInsert">
+		INSERT
+		  INTO
+		       TAG
+		VALUES
+		       (
+		       SEQ_TAGNO.NEXTVAL,
+		       ?,
+		       SEQ_RNO.CURRVAL
+		       )
+	</entry>
+	
+	<entry key="reviewPhotoInsert">
+		INSERT
+		  INTO
+		       REVIEW_PHOTO
+		       (
+		       REVIEW_PHOTO_NO,
+		       REVIEW_NO,
+		       ORIGIN_NAME,
+		       CHANGE_NAME,
+		       FILE_PATH
+		       )
+		VALUES
+		       (
+		       SEQ_TAGNO.NEXTVAL,
+		       SEQ_RNO.CURRVAL,
+		       ?,
+		       ?,
+		       ?
+		       )
+	
+	</entry>
+	
+	
+	<entry key="requestInsert">
+		INSERT 
+		  INTO
+		       REQUEST
+		       (
+		       REQUEST_NO,
+		       REQUEST_CONTENT,
+		       PLACE_NO,
+		       MEM_NO
+		       )
+		VALUES
+		       (
+		       SEQ_REQNO.NEXTVAL,
+		       ?,
+		       ?,
+		       ?
+		       )
+			   	
+	</entry>
+	
+	
+	<entry key="photoListSelect">
+		SELECT 
+		       P.PLACE_NO,
+		       ORIGIN_NAME,
+		       CHANGE_NAME,
+		       FILE_PATH,
+		       UPLOAD_DATE
+		  FROM
+		       REVIEW_PHOTO 
+		  JOIN 
+		       REVIEW P USING(REVIEW_NO)
+		 WHERE 
+		       PLACE_NO = ?
+		UNION         
+		SELECT
+		       PLACE_NO,
+		       ORIGIN_NAME,
+		       CHANGE_NAME,
+		       FILE_PATH,
+		       UPLOAD_DATE
+		  FROM
+		       PLA_PHOTO
+		  JOIN 
+		       PLACE USING(PLACE_NO)
+		 WHERE 
+		       PLACE_NO = ?
+		 ORDER
+		    BY 
+		       UPLOAD_DATE DESC
+	</entry>
+	
+	<entry key="placeSelectPhoto">
+		SELECT 
+               PLACE_NO,
+		       REVIEW_NO,
+		       ORIGIN_NAME,
+		       CHANGE_NAME,
+		       FILE_PATH,
+		       UPLOAD_DATE
+		  FROM
+		       REVIEW_PHOTO 
+		  JOIN 
+		       REVIEW USING(REVIEW_NO)
+		 WHERE 
+		       PLACE_NO = ?
+		 ORDER
+		    BY 
+		       UPLOAD_DATE DESC
+
+	</entry>
+
+
+	<entry key="placeIncreaseCount">
+		UPDATE 
+		        PLACE
+		   SET 
+		        PLACE_VIEWS = PLACE_VIEWS + 1
+		 WHERE
+		        PLACE_NO = ?
+		   AND        
+		        PLACE_STATUS = 'Y'
+	
+	</entry>
+	
+	<entry key="placeSelectDetail">
+		SELECT 
+			   PLACE_NO, 
+			   PLACE_NAME, 
+			   PLACE_TYPE, 
+			   PLACE_ADDRESS, 
+			   PLACE_PHONE,
+			   PLACE_KIND,
+			   PLACE_TIME,
+			   PLACE_DAYOFF,
+			   PLACE_PARKING,
+			   PLACE_INFO,
+			   PLACE_VIEWS,
+			   (SELECT COUNT(*)
+       			  FROM REVIEW
+       			 WHERE PLACE_NO = ?) "SUM_REVIEW",
+                (SELECT SUM(REVIEW_COUNT)
+                  FROM REVIEW
+                  WHERE PLACE_NO= ?) "SUM_COUNT",
+               (SELECT COUNT(*) 
+                 FROM WISH
+                 WHERE PLACE_NO = ?) "PLACE_WISH"
+  		   FROM PLACE
+ 		  WHERE PLACE_NO = ?
+ 		    AND PLACE_STATUS = 'Y'
+	</entry>
+
+	     <!-- 리뷰  select  -->
+	<entry key="placeSelectReview">
+		 SELECT 
+		        PLACE_NO,
+		        REVIEW_NO, 
+		        MEM_NO, 
+		        MEM_NICKNAME, 
+		        REVIEW_COUNT, 
+		        REVIEW_MENU_TYPE, 
+		        REVIEW_CONTENT, 
+		        REVIEW_CREATE_DATE, 
+		        MEM_PROFILE_REVISE, 
+		        MEM_PROFILE_SAVEPATH
+		  FROM 
+		        REVIEW 
+		  JOIN MEMBER USING(MEM_NO)
+		 WHERE 
+		       PLACE_NO = ?
+		   AND 
+		       REVIEW_DELETED = 'N'
+		 ORDER
+		    BY REVIEW_CREATE_DATE DESC
+
+	</entry>
+	
+	<entry key="placeSelectReviewTags">
+		SELECT   
+				PLACE_NO
+			   ,REVIEW_NO
+			   ,TAG_CONTENT
+		  FROM 
+		  	    TAG
+		  JOIN 
+		  		REVIEW USING(REVIEW_NO) 
+		 WHERE 
+		 		PLACE_NO = ?
+		   AND 
+		   		REVIEW_NO = ?
+	</entry>
+
+	<entry key="placeSelectReviewPhoto">
+		SELECT 
+				REVIEW_NO
+			   ,ORIGIN_NAME
+			   ,CHANGE_NAME
+			   ,FILE_PATH
+		  FROM 
+		  		REVIEW_PHOTO 
+		 WHERE 
+		 		REVIEW_NO = ?
+		 ORDER
+		    BY 
+		    	UPLOAD_DATE DESC
+	</entry>
+
+	<!--              강매란 추가                                 -->
+
+	<entry key="placeReviewLikeSelect">
+		SELECT 
+		       MEM_NO, REVIEW_NO
+	      FROM 
+	           REVIEW_LIKE
+	     WHERE 
+	           REVIEW_NO IN (
+	                         SELECT 
+	                                REVIEW_NO
+	                           FROM 
+	                                REVIEW
+	                          WHERE 
+	                                PLACE_NO = ? 
+                             )
+	       AND 
+	           MEM_NO = ?
+	</entry>
+
+
+	<entry key="placeInsertWish">
+		INSERT 
+		  INTO 
+		       WISH
+		       (
+		       MEM_NO,
+		       PLACE_NO
+		       )
+		VALUES
+		       (
+		       ?,
+		       ?
+			   )
+	</entry>
+	
+	<entry key="placeWishCount">
+		SELECT 
+		       COUNT(*) "PLACE_WISH"
+		  FROM 
+		       WISH
+         WHERE 
+               PLACE_NO = ?
+	</entry>
+	
+	<entry key="selectReviewCount">
+	 SELECT 
+	 		REVIEW_NO, COUNT(*) "LIKE_RE_COUNT"
+	   FROM 
+	        ( 
+	         SELECT REVIEW_NO
+	         FROM REVIEW
+	         JOIN REVIEW_LIKE USING(REVIEW_NO)
+	  		 WHERE PLACE_NO = ?
+	  		)
+	  GROUP 
+	     BY 
+	         REVIEW_NO
+	</entry>
+	
+	<entry key="likeReviewInsert">
+		INSERT 
+		  INTO 
+		       REVIEW_LIKE
+		       (
+		       MEM_NO,
+		       REVIEW_NO
+		       )
+		VALUES
+		       (
+		       ?,
+		       ?
+			   )
+	
+	</entry>
+	
+	<entry key="likeReviewDelete"> 
+		DELETE
+	      FROM 
+	           REVIEW_LIKE   
+	     WHERE 
+	           MEM_NO = ?
+	       AND 
+	           REVIEW_NO = ?
+	</entry>
+	
+	<entry key="recountReviewCount">
+		 SELECT 
+				COUNT(*)"RE_RECOUNT"
+	       FROM 
+	            REVIEW_LIKE
+	      WHERE 
+	            REVIEW_NO = ?
+	</entry>
+	<!-- 강매란 끝  -->
+	
+	
+	<!--  이유경 메뉴 셀렉트  -->
+	<entry key="placeMenuSelect">
+      SELECT
+            PLACE_NO,
+            MENU_NAME,
+               PRICE,
+               MENU_TYPE
+        FROM 
+             PLA_MENU
+       WHERE 
+             PLACE_NO = ?
+   </entry>
+
+
+	<!-- 이유경 메뉴 셀렉트 끝  -->	
+	
+	
+	<!-- 이영준 시작  -->
+	<entry key="insertPlace">
+		INSERT
+	      INTO
+	           PLACE
+	           (
+         		PLACE_NO,
+         		PLACE_NAME,
+         		PLACE_TYPE,
+         		PLACE_ADDRESS,
+         		PLACE_PHONE,
+         		PLACE_KIND,
+         		PLACE_TIME,
+        		PLACE_DAYOFF,
+         		PLACE_PARKING,
+				PLACE_INFO,
+         		PLACE_STATUS
+	            )
+	   	VALUES
+	           (
+                SEQ_PNO.NEXTVAL,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                'Y'
+	           )
+	</entry>
+	
+	<entry key="insertMenu">
+	
+		INSERT
+	      INTO
+     		   PLA_MENU
+    		   (
+				PLACE_NO,
+				MENU_NAME,
+				PRICE,
+				MENU_TYPE	         	
+                )
+   		VALUES
+               (
+            	SEQ_PNO.CURRVAL,
+            	?,
+            	?,
+            	?
+                )
+	</entry>
+	
+	<entry key="insertPlacePhoto">
+		INSERT
+		  INTO
+			   PLA_PHOTO
+			   (
+				PLACE_PHOTO_NO,
+				PLACE_NO,
+				ORIGIN_NAME,
+				CHANGE_NAME,
+				FILE_PATH
+				)
+		VALUES
+			   (
+				SEQ_PPNO.NEXTVAL,
+				SEQ_PNO.CURRVAL,
+				?,
+				?,
+				?
+				)
+	 </entry>	
+	 
+	 
+	 <entry key="selectWish">
+	  SELECT
+	         A.PLACE_NO,
+	         PLACE_NAME,
+	         CHANGE_NAME,
+	         FILE_PATH
+		        
+		 FROM WISH A
+		 LEFT JOIN PLACE B ON (A.PLACE_NO = B.PLACE_NO)
+		 LEFT JOIN
+		         PLA_PHOTO C ON( B.PLACE_NO = C.PLACE_NO)
+		WHERE 
+		     MEM_NO = ?  
+		 </entry>
+		
+		
+	<entry key="deleteWish">
+		DELETE
+	      FROM 
+	           WISH   
+	     WHERE 
+	           MEM_NO = ?
+	       AND 
+	           PLACE_NO = ?
+	 </entry>
+	<!-- 이영준 끝  -->
+	
+	
+	<!-- 박혜진 시작 -->
+	<entry key="selectListCount">
+		SELECT 
+			   COUNT(*)
+		  FROM 
+			   PLACE
+	  	 WHERE 
+			   PLACE_STATUS = 'Y'
+	</entry>
+	
+	<entry key="selectList">
+	  SELECT *
+	    FROM( 
+	         SELECT 
+	                ROWNUM RNUM,
+	                A.* 
+	           FROM(
+	                 SELECT 	
+	                 P.*,
+	                ( SELECT 
+	                        COUNT(*) 
+	                    FROM 
+	                        WISH
+	                    JOIN 
+	                        PLACE USING(PLACE_NO)
+	                    WHERE 
+	                        PLACE_NO = P.PLACE_NO) WISHCOUNT,
+	                (SELECT 
+	                       ROUND(AVG(REVIEW_COUNT))
+	                     FROM 
+	                          REVIEW
+	                     WHERE 
+	                          PLACE_NO = P.PLACE_NO) GRADE,
+	                (SELECT 
+	                       COUNT(*) REVIEWCOUNT
+	                     FROM 
+	                          REVIEW
+	                     WHERE 
+	                          PLACE_NO = P.PLACE_NO) REVIEWCOUNT
+				        FROM 
+				            (SELECT 
+				                    PLACE_NO,
+				                    SUBSTR(PLACE_ADDRESS, 1, 2) PLACE_ADDRESS,
+				                    PLACE_NAME,
+				                    FILE_PATH || CHANGE_NAME TITLEIMG,
+				                    PLACE_TYPE
+				                FROM 
+				                    PLACE
+				                LEFT JOIN 
+				                         PLA_PHOTO USING(PLACE_NO)
+				                WHERE 
+				                    DECODE(?, 1, PLACE_ADDRESS, 2, PLACE_TYPE, 3, PLACE_KIND, 4, PLACE_NAME)                        
+				                    LIKE ?
+				                 AND 
+				                    PLACE_STATUS = 'Y') P
+				                ORDER
+				                     BY 
+				                        GRADE DESC)A
+				                        )
+	    WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectOrderByList">
+	
+	
+	</entry>
+	
+	
+	<!-- 박혜진 끝 -->
+	
+	
+	
+	
+	
+</properties>	

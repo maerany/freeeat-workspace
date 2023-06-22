@@ -1,0 +1,5 @@
+package com.freeeat.place.model.vo;
+
+public class Place {
+
+}

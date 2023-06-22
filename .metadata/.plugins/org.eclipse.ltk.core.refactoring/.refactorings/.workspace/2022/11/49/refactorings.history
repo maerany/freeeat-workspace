@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;Freeeat/src/com/freeeat/place/controller/RequestInsertController.java&apos;" deleteContents="false" description="Delete resource &apos;Freeeat/src/com/freeeat/place/controller/RequestInsertController.java&apos;" element1="/Freeeat/src/com/freeeat/place/controller/RequestInsertController.java" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1669777319668"/>
+</session>

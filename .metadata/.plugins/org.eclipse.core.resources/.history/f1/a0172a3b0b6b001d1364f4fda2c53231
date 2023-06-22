@@ -1,0 +1,542 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+
+    <title>식당상세정보보기</title>
+
+    <style>
+        
+        #store-name, #review-info{
+        	font-size: 50px;
+        }
+        
+        div{
+            /* border: 1px solid red; */
+        
+        }
+
+        a{
+            text-decoration: none;
+            color: black;
+        }
+
+        /* #outer{
+            width: 100%;
+            height: 3000px;
+        } */
+
+/* -------------------------------- 식당상세 상단 ---------------------------------- */
+
+        #photo-area, #detail-area, 
+        #store-detail-area, #review-area{
+            width:1000px;
+            margin: auto;
+            box-sizing: border-box;
+
+        }
+
+        #photo-area > div {
+            width: 30%;
+            height: 280px;
+            margin-left: 20px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        #photo-area a{
+            color: black;
+            font-weight: 600;
+            margin-left: 90%;
+        }
+
+        #photo-area > p {
+            margin: 10px;
+            padding: 0;
+        }
+
+        #detail-area ul{
+            margin: 15px 0 15px 0;
+            padding: 0;
+        }
+
+        #detail-area ul li {
+            margin-left: 10px;
+            display: inline-block;
+            list-style: none;
+        }
+
+        #star-score-area {
+            font-size: 24px;
+        }
+
+        #star-score-area p {
+            margin-left: 5px;
+        }
+
+
+        #click-area{
+        	margin-top : 20px;
+            width: 1000px;
+            height: 40px;
+        }
+
+        #click-area  a {
+            color: black;
+            font-size: 20px;
+            border: 1px solid black;
+            border-radius: 45px;
+            padding: 10px;
+        }
+
+        #click-area  a:hover {
+            border: 1px solid red;
+            color:red;
+        }
+
+        #click-area-left, #click-area-right{
+            width: 490px;
+            display:inline-block;
+
+        }
+
+        #click-area-left a{
+            float: left;
+            margin-left: 15px;
+
+        }
+
+        #click-area-left a:last-child{
+            margin-left: 25px;
+        }
+
+        #click-area-right a{
+            float: right;
+            margin-right: 25px;
+        }
+        
+/* ------------------------- 식당 상세 중간 ----------------------------- */
+/*  */
+
+        /* #store-detail-area {
+            width:1000px;
+            margin: auto;
+        } */
+
+        #store-detail-info th{
+            text-align: left;
+            vertical-align: top;
+            width: 200px;
+            font-size: 1.0rem;
+            color :rgb(69, 69, 69);
+            padding: 5px 5px 5px 15px;
+            font-weight: 600;
+        }
+
+        #store-detail-info td{
+            text-align: left;
+            vertical-align: middle;
+            width: 500px;
+            font-size: 1.0rem;
+            color: #4f4f4f;
+            padding: 5px 5px 5px 15px;
+            font-weight: 500px;
+        }
+
+        #store-detail-info li {
+            line-height: 30px;
+            display: flex;
+            list-style: none;
+            margin-bottom: 8px;
+        }
+
+        #store_menu .store_menuTag{
+            flex-basis: 11%;
+            border: 1px solid cadetblue;
+            border-radius: 18px 18px 18px 18px;
+            background-color: cadetblue;
+            text-align: center;
+            margin-right: 20px;
+            font-size: 13px;
+            color:aliceblue;
+        }
+
+        #store_menu .store_menuItem{
+            flex-basis : 40%;
+            margin-right:20px;
+
+        }
+
+        #store_menu .store_menuPrice{
+            flex-basis : 20%;
+            text-align: right;
+        }
+
+
+/* ----------------------------- 식당 상세 하단 ----------------------------- */
+/* 리뷰 업데이트 : ajax 비동기식 구현 */
+	
+		#review-detail, #review-photo, #review-header{
+			width : 900px;
+		}
+	
+	
+		#review-detail{
+			height:auto;
+			border:1px solid black;
+            margin: auto;
+		}
+
+        #review-header{
+            height: 120px;
+            display: inline-block;
+            /* border:1px solid brown; */
+
+        }
+
+        #member-profil{
+            float:left;
+            margin-top:10px;
+            margin-left:10px;
+        }
+
+        #review-detail-right, #review-detail-left {
+            width:375px;
+            height: 120px;
+            box-sizing: border-box;
+            float:left;
+            margin-left: 20px;
+            /* border: 1px solid pink; */
+        }
+
+        #review-detail-right i, #review-detail-left i {
+            font-size : 15px;
+        }
+
+        #review-detail-right > div, #review-detail-left > div {
+            width: 350px;
+        }
+
+        .reviewRight, .reviewLeft{
+            display: block;
+            text-align: right;
+            margin-top: 15px;
+        }
+        
+        .reviewRight{
+            text-align: right;
+        }
+
+        .reviewLeft{
+            text-align: left;
+        }
+
+        .report{
+            padding-top: 10px;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            font-size: 12px;
+        }
+
+        #review-detail-right > .like > a{
+            padding:5px 5px;
+            border-radius: 40px;
+            /* border:2px solid cadetblue; */
+            text-align: center;
+        }
+
+        #review-detail-right > .like > a:hover{
+            background-color: cadetblue;
+            border:2px solid cadetblue;
+        }
+
+        #review-content {
+            width: 765px;
+            height: auto;
+            float: right;
+            background: #eae5dd;
+            margin-bottom: 10px;
+            /* border: 1px solid ; */
+        }
+
+		#review-photo{
+			/* width:900px; */
+			height:150px;
+			display: inline-block;
+            /* box-sizing: border-box; */
+			/* border : 1px solid black; */
+		}
+
+        #review-photo > .memberPhoto{
+            width: 24%;
+            height:100%;
+            margin-left: 7px;
+            overflow: hidden;
+            /* border : 1px solid green;  */
+            box-sizing: border-box;
+            float: left;
+        }
+
+        .icon{
+            margin: 10px 10px;
+            line-height: 20px;
+            padding: 4px 8px;
+            font-size: 13px;
+            background: cadetblue;
+            border-radius: 35px;
+            display: inline-block;
+            color: #ffffff; 
+        }
+
+    </style>
+
+
+</head>
+<body>
+	<%@ include file="../common/menubar.jsp" %>
+	
+	<br><br><br>
+    <div id="outer">
+
+<!-- /* -------------------------------- 식당상세 상단 ---------------------------------- */ -->
+
+        <div id="photo-area" class="area">
+            <div>사진1</div>
+            <div>사진2</div>
+            <div>사진3</div>
+            <p><a href="#">더보기 ></a></p>
+        </div>
+
+        <!-- 여기는 타입이 들어갈거예용 -->
+        <div id="detail-area">
+            <div>
+                <ul>
+                    <li>타입넣는구역</li>
+                </ul>
+            </div>
+
+            <div>
+                <h1 id="store-name">상호명</h1>
+            </div>
+
+            <div>
+                <ul>
+                    <li>카테고리</li>
+                    <li>식당 주소</li>
+                    <li><a href="#">주소복사</a></li>
+                </ul>
+            </div>
+
+            <div id="star-score-area">
+                <p>
+                    <span>★★★★★</span>
+                    <span>(평점)</span>
+                    <span><a href="#review-area">몇명이?</a></span>
+                </p>
+            </div>
+            
+            <div id="click-area">
+                <div id="click-area-left">
+                    <a id="like" href="#" onclick="test1();"><span>♡좋아요<i style="font-size:13px;">10</i></span></a>
+                    <a href="#"><span>공유하기</span></a>
+                </div>
+                <div id="click-area-right">
+                    <a href="#"><span>리뷰쓰기</span></a> 
+                </div>         
+            </div>
+        </div>
+
+        <script>
+           function test1(){
+                
+                
+
+                var msg = '♥좋아요';
+
+                $('#like').children().eq(0).html(msg);
+                $('#like').css('color', 'red');
+           }
+
+
+        </script>
+
+
+<!-- /* ------------------------- 식당 상세 중간 ----------------------------- */ -->
+        <br><br>
+            <hr>
+        <br><br>
+        <div id="store-detail-area">
+            <table id="store-detail-info">
+                <tr>
+                    <th>기본정보</th>
+                    <td>내용</td>
+                </tr>
+                <tr>
+                    <th>지역</th>
+                    <td>서울</td>
+                </tr>
+                <tr>
+                    <th>업종</th>
+                    <td>카페</td>
+                </tr>
+                <tr>
+                    <th>매장소개</th>
+                    <td>맛있는 비건을 판매하는 공간~</td>
+                </tr>
+                <tr>
+                    <th>전화번호</th>
+                    <td>010-1234-1234</td>
+                </tr>
+                <tr>
+                    <th>영업시간 및 휴무일</th>
+                    <td>월-금:11시 ~ 18시</td>
+                </tr>
+                <tr>
+                    <th>편의/시설정보</th>
+                    <td>주차공간</td>
+                </tr>
+                <tr>
+                    <th>메뉴</th>
+                    <td id="store_menu">
+                        <u1> 
+                            <li>
+                                <span class="store_menuTag">태그</span>
+                                <span class="store_menuItem">메ewre뉴명</span>
+                                <span class="store_menuPrice">가격33</span>
+                            </li>
+                            <li>
+                                <span class="store_menuTag">동물복지</span>
+                                <span class="store_menuItem">메뉴werwer명</span>
+                                <span class="store_menuPrice">가e33격</span>
+                            </li>
+                            <li>
+                                <span class="store_menuTag">태그</span>
+                                <span class="store_menuItem">메3234뉴명</span>
+                                <span class="store_menuPrice">가2344격</span>
+                            </li>
+                            <li>
+                                <span class="store_menuTag">태그</span>
+                                <span class="store_menuItem">메234뉴명</span>
+                                <span class="store_menuPrice">234가격</span>
+                            </li>
+                            <li>
+                                <span class="store_menuTag">태그</span>
+                                <span class="store_menuItem">메2343뉴명</span>
+                                <span class="store_menuPrice">가3432격</span>
+                            </li>
+                        </u1>
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+		
+        <br><br>
+            <hr>
+        <br><br>
+<!-- /* ----------------------------- 식당 상세 하단 ----------------------------- */ -->
+<!-- /* 리뷰 업데이트 : ajax 비동기식 구현 */ -->
+       	
+
+       	
+       
+       
+        <div id="review-area">
+       		<h1 id="review-info">00건의 리뷰가 있어요 😉</h1>
+			
+			<br><br><br>
+			
+			<div id="review-detail" class="reviewArea">
+                <div id="review-header">
+                    <div id="member-profil" style="width:100px; height:100px;">
+                        <div style="border-radius:50%; background:url('https://s3-ap-northeast-1.amazonaws.com/dc-user-profile-photo/profile_1657612148_18078_17678_1461073230_3791_5716354e5c988.jpg') no-repeat; background-size:auto 100px; background-position: center; width:auto; height:100px;"></div>			
+                    </div>			
+                    
+                    <div id="review-detail-left">
+                        <div class="reviewLeft"><strong>닉네임</strong></div>
+                        <div class="reviewLeft"><i class="date reviewLeft">6월 23일</i></div>
+                        <div class="reviewLeft"><p>★★★★★</p></div>
+                    </div>
+
+                    <div id="review-detail-right">
+                        <div class="reviewRight like"><a href="#">공감👍</a></div>
+                        <div class="reviewRight"><i>4명이 공감했어요!</i></div>
+                        <div class="reviewRight report"><a href="#">신고🚨</a></div>
+                    </div>
+                </div>
+
+				<div id="review-content"> content~~~~~ </div>
+				<div id="review-photo">
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+				</div>
+                <br style="clear:both;">
+				<p id="tags">
+					<span class="icon">매장이 청결해요!</span>
+					<span class="icon">세상에나!</span>
+					<span class="icon">태그들</span>
+					<span class="icon">태그들</span>
+					<span class="icon">태그들</span>
+				</p>
+			</div>
+        </div>
+
+		<br><br><br>
+		
+		<div id="review-detail" class="reviewArea">
+                <div id="review-header">
+                    <div id="member-profil" style="width:100px; height:100px;">
+                        <div style="border-radius:50%; background:url('https://s3-ap-northeast-1.amazonaws.com/dc-user-profile-photo/profile_1657612148_18078_17678_1461073230_3791_5716354e5c988.jpg') no-repeat; background-size:auto 100px; background-position: center; width:auto; height:100px;"></div>			
+                    </div>			
+                    
+                    <div id="review-detail-left">
+                        <div class="reviewLeft"><strong>닉네임</strong></div>
+                        <div class="reviewLeft"><i class="date reviewLeft">6월 23일</i></div>
+                        <div class="reviewLeft"><p>★★★★★</p></div>
+                    </div>
+
+                    <div id="review-detail-right">
+                        <div class="reviewRight like"><a href="#">공감👍</a></div>
+                        <div class="reviewRight"><i>4명이 공감했어요!</i></div>
+                        <div class="reviewRight report"><a href="#">신고🚨</a></div>
+                    </div>
+                </div>
+
+				<div id="review-content"> content~~~~~ </div>
+				<div id="review-photo">
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+					<div class="memberPhoto"><img src="https://d12zq4w4guyljn.cloudfront.net/300_300_20220623033428587_photo_eL0L9p5ekIoZ.jpg" style="width:100%; margin-top:-25px;"></div>
+				</div>
+                <br style="clear:both;">
+				<p id="tags">
+					<span class="icon">매장이 청결해요!</span>
+					<span class="icon">세상에나!</span>
+					<span class="icon">태그들</span>
+					<span class="icon">태그들</span>
+					<span class="icon">태그들</span>
+				</p>
+			</div>
+        </div>
+		
+
+
+		<div>
+			<%@ include file="../common/footer.jsp" %>
+		</div>
+    </div> <!-- outer div 닫는 태그 -->
+    
+</body>
+</html>
